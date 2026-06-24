@@ -31,6 +31,7 @@ export function ProductSection() {
               key={cat.id}
               type="button"
               onClick={() => setActiveFilter(cat.id)}
+              aria-pressed={activeFilter === cat.id}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className={cn(

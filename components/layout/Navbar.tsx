@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Logo } from "@/components/ui/Logo";
+import { SmoothScrollLink } from "@/components/ui/SmoothScrollLink";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { navItems } from "@/data/navigation";
 import { cn } from "@/lib/utils";
@@ -35,6 +35,19 @@ export function Navbar() {
     };
   }, [isOpen]);
 
+  const closeMenu = () => setIsOpen(false);
+
+  const navLinkClass = (isMobile = false) =>
+    cn(
+      isMobile
+        ? "block rounded-lg px-4 py-3 text-base font-medium text-foreground hover:bg-accent"
+        : "text-sm font-medium transition-colors hover:text-secondary",
+      !isMobile &&
+        (scrolled
+          ? "text-foreground hover:text-primary"
+          : "text-white/90")
+    );
+
   return (
     <header
       className={cn(
@@ -45,39 +58,38 @@ export function Navbar() {
       )}
     >
       <nav className="container-max flex items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-        <Link
+        <SmoothScrollLink
           href="#home"
           className="flex items-center gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
         >
           <Logo size={40} variant={scrolled ? "default" : "light"} />
           <div className="hidden sm:block">
-            <span className={cn(
-              "font-serif text-lg font-bold transition-colors",
-              scrolled ? "text-foreground" : "text-white"
-            )}>
+            <span
+              className={cn(
+                "font-serif text-lg font-bold transition-colors",
+                scrolled ? "text-foreground" : "text-white"
+              )}
+            >
               Arshi Essentials
             </span>
           </div>
-        </Link>
+        </SmoothScrollLink>
 
         <div className="hidden items-center gap-8 md:flex">
           {navItems.map((item) => (
-            <Link
+            <SmoothScrollLink
               key={item.href}
               href={item.href}
-              className={cn(
-                "text-sm font-medium transition-colors hover:text-secondary",
-                scrolled ? "text-foreground hover:text-primary" : "text-white/90"
-              )}
+              className={navLinkClass()}
             >
               {item.label}
-            </Link>
+            </SmoothScrollLink>
           ))}
-          <ThemeToggle />
+          <ThemeToggle variant={scrolled ? "default" : "light"} />
         </div>
 
         <div className="flex items-center gap-3 md:hidden">
-          <ThemeToggle />
+          <ThemeToggle variant={scrolled ? "default" : "light"} />
           <button
             type="button"
             onClick={() => setIsOpen(!isOpen)}
@@ -87,6 +99,7 @@ export function Navbar() {
             )}
             aria-label={isOpen ? "Close menu" : "Open menu"}
             aria-expanded={isOpen}
+            aria-controls="mobile-nav-menu"
           >
             {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
@@ -96,6 +109,7 @@ export function Navbar() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
+            id="mobile-nav-menu"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
@@ -109,13 +123,13 @@ export function Navbar() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.05 }}
                 >
-                  <Link
+                  <SmoothScrollLink
                     href={item.href}
-                    onClick={() => setIsOpen(false)}
-                    className="block rounded-lg px-4 py-3 text-base font-medium text-foreground hover:bg-accent"
+                    onClick={closeMenu}
+                    className={navLinkClass(true)}
                   >
                     {item.label}
-                  </Link>
+                  </SmoothScrollLink>
                 </motion.div>
               ))}
             </div>

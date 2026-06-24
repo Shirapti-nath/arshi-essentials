@@ -1,36 +1,50 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Arshi Essentials
 
-## Getting Started
+Elegant ethnic wear showcase website for **Arshi Essentials** — premium sarees, Kanchipuram silk, and traditional Indian fashion.
 
-First, run the development server:
+## Live website
+
+**https://shirapti-nath.github.io/arshi-essentials/**
+
+## Repository
+
+**https://github.com/Shirapti-nath/arshi-essentials**
+
+## Features
+
+- Single-page design with smooth section navigation
+- Dark mode
+- Product collections with category filters
+- Customer review gallery with lightbox
+- WhatsApp, phone, email, and Instagram contact options
+- Store locations (Madurai & Pune)
+- Mobile-optimized layout with Android scroll fixes
+
+## Run locally
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Build
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+```
 
-## Learn More
+For a GitHub Pages build (same as CI):
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+GITHUB_PAGES=true npm run build
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Static files are output to the `out/` folder.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Contact
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Phone:** +91 90251 65509
+- **Email:** arshistyles27@gmail.com
+- **Instagram:** [@arshiessentials](https://instagram.com/arshiessentials)

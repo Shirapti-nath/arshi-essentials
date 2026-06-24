@@ -98,9 +98,7 @@ export function HeroSection() {
             className="mt-10 flex flex-col items-center gap-3 sm:flex-row lg:justify-start"
           >
             <motion.a
-              href={contact.whatsapp}
-              target="_blank"
-              rel="noopener noreferrer"
+              href={contact.phoneTel}
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.97 }}
               className="inline-flex items-center gap-2.5 rounded-full border border-white/30 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur-md transition-colors hover:border-secondary hover:bg-white/20"

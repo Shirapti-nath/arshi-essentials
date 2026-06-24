@@ -4,6 +4,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import type { Product } from "@/types";
+import { contact } from "@/data/contact";
 import { cn } from "@/lib/utils";
 
 type ProductCardProps = {
@@ -49,10 +50,12 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
       <div className="p-6">
         <p className="text-sm leading-relaxed text-muted">{product.description}</p>
         <a
-          href="#contact"
+          href={`${contact.whatsapp}?text=${encodeURIComponent(`Hi, I'm interested in the ${product.title} collection.`)}`}
+          target="_blank"
+          rel="noopener noreferrer"
           className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-primary transition-all hover:gap-3 hover:text-primary-light"
         >
-          Explore Collection
+          Enquire on WhatsApp
           <ArrowRight className="h-4 w-4" />
         </a>
       </div>

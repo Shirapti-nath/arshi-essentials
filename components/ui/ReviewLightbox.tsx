@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import Image from "next/image";
 import { X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -11,6 +12,22 @@ type ReviewLightboxProps = {
 };
 
 export function ReviewLightbox({ review, onClose }: ReviewLightboxProps) {
+  useEffect(() => {
+    if (!review) return;
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [review, onClose]);
+
   return (
     <AnimatePresence>
       {review && (

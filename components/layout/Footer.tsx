@@ -1,7 +1,7 @@
-import Link from "next/link";
 import { Mail, Phone } from "lucide-react";
 import { InstagramIcon } from "@/components/ui/InstagramIcon";
 import { Logo } from "@/components/ui/Logo";
+import { SmoothScrollLink } from "@/components/ui/SmoothScrollLink";
 import { navItems } from "@/data/navigation";
 import { contact } from "@/data/contact";
 
@@ -60,12 +60,12 @@ export function Footer() {
             <ul className="mt-4 space-y-2">
               {navItems.map((item) => (
                 <li key={item.href}>
-                  <Link
+                  <SmoothScrollLink
                     href={item.href}
                     className="text-sm text-muted transition-colors hover:text-primary"
                   >
                     {item.label}
-                  </Link>
+                  </SmoothScrollLink>
                 </li>
               ))}
             </ul>
