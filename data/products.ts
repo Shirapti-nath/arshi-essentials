@@ -1,4 +1,5 @@
 import type { Product } from "@/types";
+import { assetPath } from "@/lib/assetPath";
 
 export const products: Product[] = [
   {
@@ -6,7 +7,7 @@ export const products: Product[] = [
     title: "Kanchipuram Silk Sarees",
     description:
       "Premium handwoven silk sarees with traditional temple designs and gold zari borders.",
-    image: "/products/kanchipuram-collection.jpg",
+    image: assetPath("/products/kanchipuram-collection.jpg"),
     imageAlt:
       "Authentic Kanchipuram Kanjeevaram silk sarees with gold zari temple borders from Tamil Nadu",
     category: "silk",
@@ -61,7 +62,7 @@ export const products: Product[] = [
     id: "pregnancy-dresses",
     title: "Pregnancy Dresses for Women",
     description: "Comfortable and elegant maternity ethnic wear.",
-    image: "/products/pregnancy.jpg",
+    image: assetPath("/products/pregnancy.jpg"),
     imageAlt: "Expecting mother in comfortable elegant maternity wear",
     category: "maternity",
   },

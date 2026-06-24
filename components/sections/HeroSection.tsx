@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { Mail, Phone } from "lucide-react";
 import { useRef } from "react";
 import { contact } from "@/data/contact";
+import { assetPath } from "@/lib/assetPath";
 
 export function HeroSection() {
   const ref = useRef<HTMLElement>(null);
@@ -23,7 +24,7 @@ export function HeroSection() {
     >
       <motion.div style={{ y }} className="absolute inset-0">
         <Image
-          src="/products/kanchipuram-silk.png"
+          src={assetPath("/products/kanchipuram-silk.png")}
           alt="Woman in maroon Kanchipuram silk saree at a temple"
           fill
           priority

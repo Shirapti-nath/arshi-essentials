@@ -12,7 +12,7 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -24,7 +24,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - name: Install dependencies
@@ -34,6 +34,10 @@ jobs:
         run: npm run build
         env:
           GITHUB_PAGES: "true"
+          NEXT_PUBLIC_BASE_PATH: "/arshi-essentials"
+
+      - name: Ensure Jekyll does not strip Next.js assets
+        run: touch out/.nojekyll
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
