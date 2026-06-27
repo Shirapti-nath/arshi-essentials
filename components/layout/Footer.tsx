@@ -5,6 +5,7 @@ import { Logo } from "@/components/ui/Logo";
 import { SmoothScrollLink } from "@/components/ui/SmoothScrollLink";
 import { navItems } from "@/data/navigation";
 import { contact } from "@/data/contact";
+import { site } from "@/data/site";
 import { href } from "@/lib/routes";
 
 const socialLinks = [
@@ -111,7 +112,15 @@ export function Footer() {
         </div>
 
         <div className="mt-4 pb-2 text-center text-sm text-muted">
-          © 2026 Arshi Essentials · arshiessentials.com
+          © 2026 Arshi Essentials ·{" "}
+          <a
+            href={site.url}
+            className="hover:text-primary"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {site.display}
+          </a>
         </div>
       </div>
     </footer>
