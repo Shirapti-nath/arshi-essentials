@@ -3,7 +3,7 @@ import { Inter, Playfair_Display } from "next/font/google";
 import { HashScrollManager } from "@/components/layout/HashScrollManager";
 import { MobileScrollGuard } from "@/components/layout/MobileScrollGuard";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
-import { CartProvider } from "@/context/CartContext";
+import { AppProviders } from "@/components/providers/AppProviders";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
@@ -60,7 +60,7 @@ export default function RootLayout({
       </head>
       <body className={`${inter.variable} ${playfair.variable} antialiased`}>
         <ThemeProvider>
-          <CartProvider>
+          <AppProviders>
             <HashScrollManager />
             <MobileScrollGuard />
             <a href="#main-content" className="skip-link">
@@ -72,7 +72,7 @@ export default function RootLayout({
             <ScrollToTop />
             <WhatsAppButton />
             <MobileBottomNav />
-          </CartProvider>
+          </AppProviders>
         </ThemeProvider>
       </body>
     </html>

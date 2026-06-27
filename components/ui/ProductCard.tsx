@@ -7,6 +7,8 @@ import { ArrowRight } from "lucide-react";
 import type { Product } from "@/types";
 import { PriceDisplay } from "@/components/ui/PriceDisplay";
 import { AddToCartButton } from "@/components/ui/AddToCartButton";
+import { WishlistButton } from "@/components/ui/WishlistButton";
+import { CompareButton } from "@/components/ui/CompareButton";
 import { href } from "@/lib/routes";
 import { cn } from "@/lib/utils";
 
@@ -44,10 +46,21 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
             className="object-cover transition-transform duration-700 group-hover:scale-110"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+          <div className="absolute right-3 top-3 z-10 flex gap-2">
+            <WishlistButton
+              productId={product.id}
+              productTitle={product.title}
+              size="sm"
+            />
+          </div>
           {product.badge && (
-            <span className="absolute left-3 top-3 rounded-full bg-secondary px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-foreground">
+            <motion.span
+              animate={{ scale: [1, 1.05, 1] }}
+              transition={{ repeat: Infinity, duration: 2 }}
+              className="absolute left-3 top-3 rounded-full bg-secondary px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-foreground"
+            >
               {badgeLabels[product.badge]}
-            </span>
+            </motion.span>
           )}
           <div className="absolute bottom-0 left-0 right-0 p-6">
             <span className="mb-2 inline-block rounded-full bg-white/20 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white backdrop-blur-sm">
@@ -65,8 +78,15 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
         <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-muted">
           {product.description}
         </p>
+        <div className="mt-3">
+          <CompareButton productId={product.id} />
+        </div>
         <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center">
-          <AddToCartButton productId={product.id} className="flex-1" />
+          <AddToCartButton
+            productId={product.id}
+            productImage={product.image}
+            className="flex-1"
+          />
           <Link
             href={href(`/products/${product.slug}/`)}
             className="inline-flex items-center justify-center gap-1 text-sm font-medium text-primary hover:underline"
