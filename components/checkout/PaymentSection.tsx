@@ -2,22 +2,31 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { formatINR } from "@/lib/format";
+import { formatINR, formatPriceRange } from "@/lib/format";
 import { assetPath } from "@/lib/assetPath";
 import { contact } from "@/data/contact";
 import type { CheckoutDetails } from "@/types";
 import { cn } from "@/lib/utils";
 
+type LineItem = {
+  title: string;
+  quantity: number;
+  price: number;
+  priceMax: number;
+};
+
 type PaymentSectionProps = {
   total: number;
+  totalMax: number;
   orderId: string;
-  items: { title: string; quantity: number; price: number }[];
+  items: LineItem[];
   details: CheckoutDetails;
   onConfirm: () => void;
 };
 
 export function PaymentSection({
   total,
+  totalMax,
   orderId,
   items,
   details,
@@ -25,12 +34,20 @@ export function PaymentSection({
 }: PaymentSectionProps) {
   const [method, setMethod] = useState<"upi" | "cod">("upi");
 
+  const totalLabel =
+    totalMax > total ? formatPriceRange(total, totalMax) : formatINR(total);
+
   const buildWhatsAppMessage = () => {
     const itemLines = items
-      .map(
-        (i) =>
-          `• ${i.title} x${i.quantity} — ${formatINR(i.price * i.quantity)}`
-      )
+      .map((i) => {
+        const lineMin = i.price * i.quantity;
+        const lineMax = i.priceMax * i.quantity;
+        const linePrice =
+          lineMax > lineMin
+            ? formatPriceRange(lineMin, lineMax)
+            : formatINR(lineMin);
+        return `• ${i.title} x${i.quantity} — ${linePrice}`;
+      })
       .join("\n");
 
     const paymentLabel =
@@ -43,7 +60,8 @@ export function PaymentSection({
         `Order ID: ${orderId}\n` +
         `Payment: ${paymentLabel}\n\n` +
         `Items:\n${itemLines}\n\n` +
-        `Total: ${formatINR(total)}\n\n` +
+        `Estimated Total: ${totalLabel}\n` +
+        `(Final price based on design selected)\n\n` +
         `Deliver to:\n${details.name}\n${details.phone}\n` +
         `${details.address}\n${details.city} — ${details.pincode}` +
         (details.email ? `\nEmail: ${details.email}` : "")
@@ -54,12 +72,10 @@ export function PaymentSection({
 
   return (
     <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-      <h2 className="font-serif text-xl font-bold text-foreground">
-        Payment
-      </h2>
+      <h2 className="font-serif text-xl font-bold text-foreground">Payment</h2>
       <p className="mt-1 text-sm text-muted">
-        Order total:{" "}
-        <span className="font-bold text-primary">{formatINR(total)}</span>
+        Estimated total:{" "}
+        <span className="font-bold text-primary">{totalLabel}</span>
       </p>
 
       <div className="mt-4 flex gap-2">
@@ -105,14 +121,14 @@ export function PaymentSection({
             />
           </div>
           <p className="mt-3 text-xs text-muted">
-            Pay {formatINR(total)} to <strong>Arshi Essentials</strong>
+            Pay as per final design price to <strong>Arshi Essentials</strong>
           </p>
         </div>
       )}
 
       {method === "cod" && (
         <div className="mt-6 rounded-xl bg-accent/50 p-4 text-center text-sm text-muted">
-          Pay {formatINR(total)} in cash when your order is delivered.
+          Pay the final amount in cash when your order is delivered.
         </div>
       )}
 

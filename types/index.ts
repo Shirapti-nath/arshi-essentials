@@ -6,8 +6,10 @@ export type Product = {
   image: string;
   imageAlt: string;
   category: string;
+  /** Starting / minimum price in INR */
   price: number;
-  mrp?: number;
+  /** Maximum price in INR (for range display) */
+  priceMax: number;
   fabric?: string;
   occasion?: string;
   badge?: "sale" | "new" | "bestseller";

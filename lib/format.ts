@@ -6,6 +6,11 @@ export function formatINR(amount: number): string {
   }).format(amount);
 }
 
+export function formatPriceRange(min: number, max: number): string {
+  if (min === max) return formatINR(min);
+  return `${formatINR(min)} – ${formatINR(max)}`;
+}
+
 export function generateOrderId(): string {
   const date = new Date();
   const y = date.getFullYear();
@@ -13,9 +18,4 @@ export function generateOrderId(): string {
   const d = String(date.getDate()).padStart(2, "0");
   const rand = Math.floor(Math.random() * 900 + 100);
   return `ARSHI-${y}${m}${d}-${rand}`;
-}
-
-export function discountPercent(price: number, mrp?: number): number | null {
-  if (!mrp || mrp <= price) return null;
-  return Math.round(((mrp - price) / mrp) * 100);
 }

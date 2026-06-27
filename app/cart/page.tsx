@@ -5,11 +5,11 @@ import Link from "next/link";
 import { Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { PriceDisplay } from "@/components/ui/PriceDisplay";
-import { formatINR } from "@/lib/format";
+import { formatINR, formatPriceRange } from "@/lib/format";
 import { href } from "@/lib/routes";
 
 export default function CartPage() {
-  const { items, subtotal, updateQuantity, removeItem, getProduct } = useCart();
+  const { items, itemCount, subtotal, subtotalMax, updateQuantity, removeItem, getProduct } = useCart();
 
   return (
     <div className="min-h-screen bg-background pt-24 pb-24">
@@ -20,7 +20,7 @@ export default function CartPage() {
         <p className="mt-2 text-muted">
           {items.length === 0
             ? "No items yet"
-            : `${items.length} item${items.length > 1 ? "s" : ""} in your cart`}
+            : `${itemCount} item${itemCount !== 1 ? "s" : ""} in your cart`}
         </p>
 
         {items.length === 0 ? (
@@ -66,7 +66,7 @@ export default function CartPage() {
                       </Link>
                       <PriceDisplay
                         price={product.price}
-                        mrp={product.mrp}
+                        priceMax={product.priceMax}
                         size="sm"
                         className="mt-1"
                       />
@@ -98,7 +98,12 @@ export default function CartPage() {
                         </div>
                         <div className="flex items-center gap-4">
                           <span className="font-bold text-foreground">
-                            {formatINR(product.price * item.quantity)}
+                            {product.priceMax > product.price
+                              ? formatPriceRange(
+                                  product.price * item.quantity,
+                                  product.priceMax * item.quantity
+                                )
+                              : formatINR(product.price * item.quantity)}
                           </span>
                           <button
                             type="button"
@@ -120,8 +125,12 @@ export default function CartPage() {
               <h2 className="font-serif text-xl font-bold">Order Summary</h2>
               <div className="mt-4 space-y-2 border-b border-border pb-4 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-muted">Subtotal</span>
-                  <span>{formatINR(subtotal)}</span>
+                  <span className="text-muted">Subtotal (est.)</span>
+                  <span>
+                    {subtotalMax > subtotal
+                      ? formatPriceRange(subtotal, subtotalMax)
+                      : formatINR(subtotal)}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted">Shipping</span>
@@ -129,8 +138,12 @@ export default function CartPage() {
                 </div>
               </div>
               <div className="mt-4 flex justify-between text-lg font-bold">
-                <span>Total</span>
-                <span className="text-primary">{formatINR(subtotal)}</span>
+                <span>Total (est.)</span>
+                <span className="text-primary">
+                  {subtotalMax > subtotal
+                    ? formatPriceRange(subtotal, subtotalMax)
+                    : formatINR(subtotal)}
+                </span>
               </div>
               <Link
                 href={href("/checkout/")}

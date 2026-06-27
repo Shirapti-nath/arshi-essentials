@@ -76,7 +76,7 @@ export default async function ProductPage({ params }: Props) {
             </h1>
             <PriceDisplay
               price={product.price}
-              mrp={product.mrp}
+              priceMax={product.priceMax}
               size="lg"
               className="mt-4"
             />

@@ -61,7 +61,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
       </Link>
 
       <div className="p-6">
-        <PriceDisplay price={product.price} mrp={product.mrp} size="sm" />
+        <PriceDisplay price={product.price} priceMax={product.priceMax} size="sm" />
         <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-muted">
           {product.description}
         </p>

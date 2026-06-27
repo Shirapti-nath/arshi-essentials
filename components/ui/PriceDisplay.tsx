@@ -1,49 +1,40 @@
-import { formatINR, discountPercent } from "@/lib/format";
+import { formatINR, formatPriceRange } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 type PriceDisplayProps = {
   price: number;
-  mrp?: number;
+  priceMax?: number;
   size?: "sm" | "md" | "lg";
   className?: string;
+  prefix?: string;
 };
 
-export function PriceDisplay({ price, mrp, size = "md", className }: PriceDisplayProps) {
-  const discount = discountPercent(price, mrp);
+export function PriceDisplay({
+  price,
+  priceMax,
+  size = "md",
+  className,
+  prefix,
+}: PriceDisplayProps) {
+  const max = priceMax ?? price;
+  const isRange = max > price;
 
   const sizeClasses = {
-    sm: { price: "text-sm", mrp: "text-xs" },
-    md: { price: "text-lg", mrp: "text-sm" },
-    lg: { price: "text-2xl", mrp: "text-base" },
+    sm: "text-sm",
+    md: "text-lg",
+    lg: "text-2xl",
   };
 
   return (
-    <div className={cn("flex flex-wrap items-baseline gap-2", className)}>
-      <span
-        className={cn(
-          "font-bold text-primary",
-          sizeClasses[size].price
-        )}
-      >
-        {formatINR(price)}
-      </span>
-      {mrp && mrp > price && (
-        <>
-          <span
-            className={cn(
-              "text-muted line-through",
-              sizeClasses[size].mrp
-            )}
-          >
-            {formatINR(mrp)}
-          </span>
-          {discount && (
-            <span className="rounded-full bg-secondary/20 px-2 py-0.5 text-xs font-semibold text-primary">
-              {discount}% off
-            </span>
-          )}
-        </>
+    <div className={cn("flex flex-wrap items-baseline gap-1", className)}>
+      {prefix && (
+        <span className={cn("font-medium text-muted", sizeClasses[size === "lg" ? "md" : "sm"])}>
+          {prefix}
+        </span>
       )}
+      <span className={cn("font-bold text-primary", sizeClasses[size])}>
+        {isRange ? formatPriceRange(price, max) : formatINR(price)}
+      </span>
     </div>
   );
 }

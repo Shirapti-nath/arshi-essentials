@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
 import { PaymentSection } from "@/components/checkout/PaymentSection";
-import { formatINR, generateOrderId } from "@/lib/format";
+import { formatINR, formatPriceRange, generateOrderId } from "@/lib/format";
 import { href } from "@/lib/routes";
 import type { CheckoutDetails } from "@/types";
 
@@ -21,7 +21,7 @@ const emptyDetails: CheckoutDetails = {
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { items, subtotal, getProduct, clearCart } = useCart();
+  const { items, itemCount, subtotal, subtotalMax, getProduct, clearCart } = useCart();
   const [details, setDetails] = useState<CheckoutDetails>(emptyDetails);
   const [orderId] = useState(() => generateOrderId());
   const [confirmed, setConfirmed] = useState(false);
@@ -43,9 +43,15 @@ export default function CheckoutPage() {
             title: product.title,
             quantity: item.quantity,
             price: product.price,
+            priceMax: product.priceMax,
           };
         })
-        .filter(Boolean) as { title: string; quantity: number; price: number }[],
+        .filter(Boolean) as {
+          title: string;
+          quantity: number;
+          price: number;
+          priceMax: number;
+        }[],
     [items, getProduct]
   );
 
@@ -145,6 +151,9 @@ export default function CheckoutPage() {
           <div className="space-y-6">
             <div className="rounded-2xl border border-border bg-card p-6">
               <h2 className="font-serif text-xl font-bold">Order Summary</h2>
+              <p className="mt-1 text-sm text-muted">
+                {itemCount} item{itemCount !== 1 ? "s" : ""}
+              </p>
               <ul className="mt-4 space-y-3 border-b border-border pb-4">
                 {lineItems.map((item) => (
                   <li key={item.title} className="flex justify-between text-sm">
@@ -152,20 +161,30 @@ export default function CheckoutPage() {
                       {item.title} × {item.quantity}
                     </span>
                     <span className="font-medium">
-                      {formatINR(item.price * item.quantity)}
+                      {item.priceMax > item.price
+                        ? formatPriceRange(
+                            item.price * item.quantity,
+                            item.priceMax * item.quantity
+                          )
+                        : formatINR(item.price * item.quantity)}
                     </span>
                   </li>
                 ))}
               </ul>
               <div className="mt-4 flex justify-between text-lg font-bold">
-                <span>Total</span>
-                <span className="text-primary">{formatINR(subtotal)}</span>
+                <span>Total (est.)</span>
+                <span className="text-primary">
+                  {subtotalMax > subtotal
+                    ? formatPriceRange(subtotal, subtotalMax)
+                    : formatINR(subtotal)}
+                </span>
               </div>
             </div>
 
             <div id="payment-section">
               <PaymentSection
                 total={subtotal}
+                totalMax={subtotalMax}
                 orderId={orderId}
                 items={lineItems}
                 details={details}

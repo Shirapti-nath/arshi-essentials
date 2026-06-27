@@ -16,7 +16,9 @@ const STORAGE_KEY = "arshi-cart";
 type CartContextValue = {
   items: CartItem[];
   itemCount: number;
+  uniqueCount: number;
   subtotal: number;
+  subtotalMax: number;
   addItem: (productId: string, quantity?: number) => void;
   removeItem: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
@@ -42,7 +44,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    // Hydrate cart from localStorage after mount (SSR-safe)
     // eslint-disable-next-line react-hooks/set-state-in-effect -- client-only hydration
     setItems(loadCart());
     setHydrated(true);
@@ -98,20 +99,27 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     [items]
   );
 
-  const subtotal = useMemo(
-    () =>
-      items.reduce((sum, item) => {
-        const product = products.find((p) => p.id === item.productId);
-        return sum + (product?.price ?? 0) * item.quantity;
-      }, 0),
-    [items]
-  );
+  const uniqueCount = items.length;
+
+  const { subtotal, subtotalMax } = useMemo(() => {
+    let min = 0;
+    let max = 0;
+    for (const item of items) {
+      const product = products.find((p) => p.id === item.productId);
+      if (!product) continue;
+      min += product.price * item.quantity;
+      max += product.priceMax * item.quantity;
+    }
+    return { subtotal: min, subtotalMax: max };
+  }, [items]);
 
   const value = useMemo(
     () => ({
       items,
       itemCount,
+      uniqueCount,
       subtotal,
+      subtotalMax,
       addItem,
       removeItem,
       updateQuantity,
@@ -122,7 +130,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     [
       items,
       itemCount,
+      uniqueCount,
       subtotal,
+      subtotalMax,
       addItem,
       removeItem,
       updateQuantity,
