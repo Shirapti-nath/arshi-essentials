@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
 import { PaymentSection } from "@/components/checkout/PaymentSection";
 import { formatINR, formatPriceRange, generateOrderId } from "@/lib/format";
@@ -20,18 +19,11 @@ const emptyDetails: CheckoutDetails = {
 };
 
 export default function CheckoutPage() {
-  const router = useRouter();
   const { items, itemCount, subtotal, subtotalMax, getProduct, clearCart } = useCart();
   const [details, setDetails] = useState<CheckoutDetails>(emptyDetails);
   const [orderId] = useState(() => generateOrderId());
   const [confirmed, setConfirmed] = useState(false);
   const [errors, setErrors] = useState<Partial<Record<keyof CheckoutDetails, string>>>({});
-
-  useEffect(() => {
-    if (items.length === 0 && !confirmed) {
-      router.replace(href("/cart/"));
-    }
-  }, [items.length, confirmed, router]);
 
   const lineItems = useMemo(
     () =>
@@ -73,7 +65,26 @@ export default function CheckoutPage() {
     document.getElementById("payment-section")?.scrollIntoView({ behavior: "smooth" });
   };
 
-  if (items.length === 0 && !confirmed) return null;
+  if (items.length === 0 && !confirmed) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background px-4 pt-24">
+        <div className="max-w-md text-center">
+          <h1 className="font-serif text-2xl font-bold text-foreground">
+            Your cart is empty
+          </h1>
+          <p className="mt-3 text-muted">
+            Add items to your cart before checkout.
+          </p>
+          <Link
+            href={href("/#collections")}
+            className="mt-8 inline-block rounded-full bg-primary px-8 py-3 text-sm font-semibold text-white"
+          >
+            Browse Collections
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   if (confirmed) {
     return (
