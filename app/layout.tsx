@@ -9,6 +9,7 @@ import { Footer } from "@/components/layout/Footer";
 import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
 import { ScrollToTop } from "@/components/layout/ScrollToTop";
 import { WhatsAppButton } from "@/components/layout/WhatsAppButton";
+import { SocialProofNotification } from "@/components/layout/SocialProofNotification";
 import "./globals.css";
 
 const inter = Inter({
@@ -71,6 +72,7 @@ export default function RootLayout({
             <Footer />
             <ScrollToTop />
             <WhatsAppButton />
+            <SocialProofNotification />
             <MobileBottomNav />
           </CartProvider>
         </ThemeProvider>
