@@ -22,7 +22,7 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://arshiessentials.com"),
+  metadataBase: new URL("https://shirapti-nath.github.io/arshi-essentials"),
   title: "Arshi Essentials | Elegant Clothing for Everyday",
   description:
     "Discover timeless ethnic fashion with our exclusive collection of sarees and traditional wear. Premium Kanchipuram silk, Madurai Sungudi cotton, kurtis, and more.",
