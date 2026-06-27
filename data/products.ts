@@ -8,9 +8,9 @@ export const products: Product[] = [
     title: "Kanchipuram Silk Sarees",
     description:
       "Premium handwoven silk sarees with traditional temple designs and gold zari borders.",
-    image: assetPath("/products/kanchipuram-collection.jpg"),
+    image: assetPath("/products/kanchipuram-silk.png"),
     imageAlt:
-      "Authentic Kanchipuram Kanjeevaram silk sarees with gold zari temple borders from Tamil Nadu",
+      "Woman in a green and pink Kanchipuram silk saree with gold zari border",
     category: "silk",
     price: 1200,
     priceMax: 15000,
@@ -24,9 +24,9 @@ export const products: Product[] = [
     title: "Madurai Sungudi Cotton Sarees",
     description:
       "Comfortable and elegant cotton sarees for everyday wear.",
-    image:
-      "https://images.unsplash.com/photo-1678705730064-a7ecbab4b3fb?auto=format&fit=crop&w=1200&q=85",
-    imageAlt: "Woman in a classic white and red Madurai cotton saree",
+    image: assetPath("/products/madurai-sungudi.png"),
+    imageAlt:
+      "Woman in a green and pink Madurai Sungudi zari kattam cotton saree",
     category: "cotton",
     price: 650,
     priceMax: 2500,
