@@ -6,31 +6,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ShoppingBag, Eye } from "lucide-react";
 import { products } from "@/data/products";
 import {
-  socialProofNames,
-  socialProofCities,
-  genericProducts,
-  purchaseMinutes,
+  socialProofMessages,
+  getProductViewMessage,
+  type SocialProofMessage,
 } from "@/data/socialProof";
 import { getBasePath } from "@/lib/assetPath";
-
-type Notification = {
-  id: number;
-  type: "purchase" | "views";
-  message: string;
-};
-
-function pick<T>(arr: T[], index: number): T {
-  return arr[index % arr.length];
-}
-
-function getDailyViewCount(key: string): number {
-  const day = new Date().toDateString();
-  let hash = 0;
-  for (const char of key + day) {
-    hash = (hash * 31 + char.charCodeAt(0)) % 1000;
-  }
-  return 12 + (hash % 34);
-}
 
 function getProductFromPath(pathname: string) {
   const base = getBasePath();
@@ -40,38 +20,10 @@ function getProductFromPath(pathname: string) {
   return products.find((p) => p.slug === slug) ?? null;
 }
 
-function buildNotifications(productTitle?: string): Notification[] {
-  const items: Notification[] = [];
-  let id = 0;
-
-  for (let i = 0; i < socialProofNames.length; i++) {
-    const name = pick(socialProofNames, i);
-    const city = pick(socialProofCities, i + 2);
-    const minutes = pick(purchaseMinutes, i + 1);
-    const item = productTitle ?? pick(genericProducts, i);
-    items.push({
-      id: id++,
-      type: "purchase",
-      message: `${name} from ${city} purchased ${item} ${minutes} minutes ago.`,
-    });
-  }
-
-  if (productTitle) {
-    const views = getDailyViewCount(productTitle);
-    items.push({
-      id: id++,
-      type: "views",
-      message: `${views} people viewed this product today.`,
-    });
-  }
-
-  return items;
-}
-
 function SocialProofNotificationInner({
   notifications,
 }: {
-  notifications: Notification[];
+  notifications: SocialProofMessage[];
 }) {
   const [index, setIndex] = useState(0);
   const [visible, setVisible] = useState(false);
@@ -100,7 +52,7 @@ function SocialProofNotificationInner({
 
   return (
     <div
-      className="pointer-events-none fixed bottom-20 left-3 z-30 max-w-[min(18rem,calc(100vw-1.5rem))] md:bottom-6 md:left-5"
+      className="pointer-events-none fixed bottom-20 left-3 z-30 max-w-[min(20rem,calc(100vw-1.5rem))] md:bottom-6 md:left-5"
       aria-live="polite"
       aria-atomic="true"
     >
@@ -143,10 +95,14 @@ function SocialProofNotificationInner({
 export function SocialProofNotification() {
   const pathname = usePathname();
   const product = useMemo(() => getProductFromPath(pathname), [pathname]);
-  const notifications = useMemo(
-    () => buildNotifications(product?.title),
-    [product?.title]
-  );
+
+  const notifications = useMemo(() => {
+    const list = [...socialProofMessages];
+    if (product?.title) {
+      list.push(getProductViewMessage(product.title));
+    }
+    return list;
+  }, [product?.title]);
 
   return (
     <SocialProofNotificationInner

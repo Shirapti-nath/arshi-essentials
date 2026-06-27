@@ -104,7 +104,17 @@ export default function CheckoutPage() {
     <div className="min-h-screen bg-background pt-24 pb-24">
       <div className="container-max px-4 sm:px-6 lg:px-8">
         <h1 className="font-serif text-3xl font-bold text-foreground">Checkout</h1>
-        <p className="mt-2 text-muted">Complete your order details and pay via UPI</p>
+        <p className="mt-2 text-muted">
+          Complete your details, pay via UPI QR, then confirm on WhatsApp with
+          your Order ID.
+        </p>
+
+        <div className="mt-6 rounded-xl border border-border bg-accent/30 px-4 py-3 text-sm text-muted">
+          <strong className="text-foreground">Payment steps:</strong> Fill
+          delivery details → Scan UPI QR below → Tap &ldquo;I&apos;ve Paid —
+          Confirm on WhatsApp&rdquo; to send your order with Order ID{" "}
+          <span className="font-mono font-medium text-foreground">{orderId}</span>
+        </div>
 
         <div className="mt-10 grid gap-10 lg:grid-cols-2">
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -144,7 +154,7 @@ export default function CheckoutPage() {
               type="submit"
               className="w-full rounded-full border border-primary py-3 text-sm font-semibold text-primary hover:bg-primary/5"
             >
-              Continue to Payment
+              Save Details &amp; Scroll to Payment
             </button>
           </form>
 
