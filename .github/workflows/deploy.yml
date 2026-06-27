@@ -33,7 +33,6 @@ jobs:
       - name: Build for GitHub Pages
         run: npm run build
         env:
-          GITHUB_PAGES: "true"
           NEXT_PUBLIC_BASE_PATH: "/arshi-essentials"
 
       - name: Verify build output

@@ -1,9 +1,9 @@
 import type { NextConfig } from "next";
 
-const isGithubPages = process.env.GITHUB_PAGES === "true";
-const useCustomDomain = process.env.CUSTOM_DOMAIN === "true";
+/** GitHub Pages project site — always served under /arshi-essentials */
 const repoBase = "/arshi-essentials";
-const needsBasePath = isGithubPages && !useCustomDomain;
+const useCustomDomain = process.env.CUSTOM_DOMAIN === "true";
+const needsBasePath = !useCustomDomain;
 
 const nextConfig: NextConfig = {
   output: "export",
