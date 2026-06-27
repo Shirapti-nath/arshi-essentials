@@ -24,12 +24,12 @@ export function HeroSection() {
     >
       <motion.div style={{ y }} className="absolute inset-0">
         <Image
-          src={assetPath("/products/kanchipuram-silk.png")}
-          alt="Woman in maroon Kanchipuram silk saree at a temple"
+          src={assetPath("/products/hero-saree.png")}
+          alt="Woman in a red and gold striped saree in a serene forest setting"
           fill
           priority
           sizes="100vw"
-          className="animate-ken-burns object-cover object-top"
+          className="animate-ken-burns object-cover object-center"
         />
       </motion.div>
 
