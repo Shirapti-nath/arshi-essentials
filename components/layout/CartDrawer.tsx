@@ -6,9 +6,7 @@ import Link from "next/link";
 import { X, Minus, Plus, ShoppingBag } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCart } from "@/context/CartContext";
-import { useToast } from "@/context/ToastContext";
 import { PriceDisplay } from "@/components/ui/PriceDisplay";
-import { EmptyState } from "@/components/ui/EmptyState";
 import { formatINR, formatPriceRange } from "@/lib/format";
 import { href } from "@/lib/routes";
 
@@ -27,7 +25,6 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
     removeItem,
     getProduct,
   } = useCart();
-  const { toast } = useToast();
 
   useEffect(() => {
     if (!open) return;
@@ -97,16 +94,22 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
             {/* Scrollable items */}
             <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-4">
               {items.length === 0 ? (
-                <EmptyState
-                  icon={<ShoppingBag className="h-10 w-10" />}
-                  title="Your cart is empty"
-                  description="Browse our collections and add your favourite sarees."
-                  actionLabel="Shop Collections"
-                  actionHref={href("/#collections")}
-                />
+                <div className="flex flex-col items-center justify-center py-16 text-center">
+                  <ShoppingBag className="mb-4 h-12 w-12 text-muted" />
+                  <p className="font-medium text-foreground">Your cart is empty</p>
+                  <p className="mt-1 text-sm text-muted">
+                    Browse our collections and add items
+                  </p>
+                  <Link
+                    href={href("/#collections")}
+                    onClick={onClose}
+                    className="mt-6 rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-white"
+                  >
+                    Shop Collections
+                  </Link>
+                </div>
               ) : (
                 <ul className="space-y-3">
-                  <AnimatePresence mode="popLayout">
                   {items.map((item) => {
                     const product = getProduct(item.productId);
                     if (!product) return null;
@@ -118,12 +121,8 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
                         : formatINR(lineMin);
 
                     return (
-                      <motion.li
+                      <li
                         key={item.productId}
-                        layout
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -20, height: 0 }}
                         className="rounded-xl border border-border bg-card p-3 shadow-sm"
                       >
                         <div className="flex gap-3">
@@ -180,19 +179,15 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
                           </div>
                           <button
                             type="button"
-                            onClick={() => {
-                              removeItem(item.productId);
-                              toast("info", "Removed from cart", product.title);
-                            }}
+                            onClick={() => removeItem(item.productId)}
                             className="text-xs font-medium text-primary hover:underline"
                           >
                             Remove
                           </button>
                         </div>
-                      </motion.li>
+                      </li>
                     );
                   })}
-                  </AnimatePresence>
                 </ul>
               )}
             </div>

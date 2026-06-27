@@ -1,12 +1,13 @@
-import { ProductGridSkeleton } from "@/components/ui/skeletons";
+import { Logo } from "@/components/ui/Logo";
 
 export default function Loading() {
   return (
-    <div className="min-h-screen bg-background pt-24 pb-16">
-      <div className="container-max section-padding">
-        <div className="mx-auto mb-10 h-8 w-48 animate-pulse rounded-lg bg-accent/60" />
-        <ProductGridSkeleton count={6} />
+    <div className="flex min-h-screen flex-col items-center justify-center bg-background">
+      <div className="animate-pulse">
+        <Logo size={64} />
       </div>
+      <p className="mt-6 font-serif text-xl text-primary">Arshi Essentials</p>
+      <p className="mt-2 text-sm text-muted">Loading...</p>
     </div>
   );
 }
