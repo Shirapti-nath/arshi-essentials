@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-const BASE = "/arshi-essentials";
+const BASE = (process.env.NEXT_PUBLIC_BASE_PATH ?? "").replace(/\/$/, "");
 
-/** Redirect bare localhost:3000/ to the app base path in dev */
+/** Redirect bare / to base path when running a GitHub Pages-style build locally */
 export function middleware(request: NextRequest) {
+  if (!BASE) return NextResponse.next();
+
   const { pathname } = request.nextUrl;
 
   if (pathname === "/" || pathname === "") {

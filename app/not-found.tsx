@@ -29,6 +29,13 @@ export default function NotFound() {
           shirapti-nath.github.io/arshi-essentials
         </a>
       </p>
+      <p className="mt-2 text-xs text-muted">
+        Local dev: open{" "}
+        <a href="http://localhost:3000/" className="text-primary hover:underline">
+          localhost:3000
+        </a>{" "}
+        (not localhost:3000/arshi-essentials)
+      </p>
     </div>
   );
 }
