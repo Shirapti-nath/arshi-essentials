@@ -1,9 +1,11 @@
+import Link from "next/link";
 import { Mail, Phone } from "lucide-react";
 import { InstagramIcon } from "@/components/ui/InstagramIcon";
 import { Logo } from "@/components/ui/Logo";
 import { SmoothScrollLink } from "@/components/ui/SmoothScrollLink";
 import { navItems } from "@/data/navigation";
 import { contact } from "@/data/contact";
+import { href } from "@/lib/routes";
 
 const socialLinks = [
   {
@@ -96,8 +98,20 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-10 border-t border-border pt-6 text-center text-sm text-muted">
-          © 2026 Arshi Essentials. All Rights Reserved.
+        <div className="mt-10 flex flex-wrap justify-center gap-4 border-t border-border pt-6 text-center text-sm text-muted">
+          <Link href={href("/shipping/")} className="hover:text-primary">
+            Shipping
+          </Link>
+          <Link href={href("/returns/")} className="hover:text-primary">
+            Returns
+          </Link>
+          <Link href={href("/privacy/")} className="hover:text-primary">
+            Privacy
+          </Link>
+        </div>
+
+        <div className="mt-4 pb-2 text-center text-sm text-muted">
+          © 2026 Arshi Essentials · arshiessentials.com
         </div>
       </div>
     </footer>

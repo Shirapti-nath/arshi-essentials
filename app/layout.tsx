@@ -3,8 +3,10 @@ import { Inter, Playfair_Display } from "next/font/google";
 import { HashScrollManager } from "@/components/layout/HashScrollManager";
 import { MobileScrollGuard } from "@/components/layout/MobileScrollGuard";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
+import { CartProvider } from "@/context/CartContext";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
 import { ScrollToTop } from "@/components/layout/ScrollToTop";
 import { WhatsAppButton } from "@/components/layout/WhatsAppButton";
 import "./globals.css";
@@ -20,7 +22,7 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://shirapti-nath.github.io/arshi-essentials"),
+  metadataBase: new URL("https://arshiessentials.com"),
   title: "Arshi Essentials | Elegant Clothing for Everyday",
   description:
     "Discover timeless ethnic fashion with our exclusive collection of sarees and traditional wear. Premium Kanchipuram silk, Madurai Sungudi cotton, kurtis, and more.",
@@ -58,16 +60,19 @@ export default function RootLayout({
       </head>
       <body className={`${inter.variable} ${playfair.variable} antialiased`}>
         <ThemeProvider>
-          <HashScrollManager />
-          <MobileScrollGuard />
-          <a href="#main-content" className="skip-link">
-            Skip to content
-          </a>
-          <Navbar />
-          {children}
-          <Footer />
-          <ScrollToTop />
-          <WhatsAppButton />
+          <CartProvider>
+            <HashScrollManager />
+            <MobileScrollGuard />
+            <a href="#main-content" className="skip-link">
+              Skip to content
+            </a>
+            <Navbar />
+            {children}
+            <Footer />
+            <ScrollToTop />
+            <WhatsAppButton />
+            <MobileBottomNav />
+          </CartProvider>
         </ThemeProvider>
       </body>
     </html>

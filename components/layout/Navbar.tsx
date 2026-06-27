@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Logo } from "@/components/ui/Logo";
 import { SmoothScrollLink } from "@/components/ui/SmoothScrollLink";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
+import { CartButton } from "@/components/layout/CartButton";
 import { navItems } from "@/data/navigation";
 import { cn } from "@/lib/utils";
 
@@ -85,10 +86,12 @@ export function Navbar() {
               {item.label}
             </SmoothScrollLink>
           ))}
+          <CartButton variant={scrolled ? "default" : "light"} />
           <ThemeToggle variant={scrolled ? "default" : "light"} />
         </div>
 
-        <div className="flex items-center gap-3 md:hidden">
+        <div className="flex items-center gap-2 md:hidden">
+          <CartButton variant={scrolled ? "default" : "light"} />
           <ThemeToggle variant={scrolled ? "default" : "light"} />
           <button
             type="button"

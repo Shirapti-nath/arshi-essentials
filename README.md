@@ -1,10 +1,10 @@
 # Arshi Essentials
 
-Elegant ethnic wear showcase website for **Arshi Essentials** — premium sarees, Kanchipuram silk, and traditional Indian fashion.
+Elegant ethnic wear marketplace for **Arshi Essentials** — shop sarees, silk collections, and traditional Indian fashion with cart checkout and UPI payment.
 
 ## Live website
 
-**https://shirapti-nath.github.io/arshi-essentials/**
+**https://arshiessentials.com**
 
 ## Repository
 
@@ -12,13 +12,14 @@ Elegant ethnic wear showcase website for **Arshi Essentials** — premium sarees
 
 ## Features
 
-- Single-page design with smooth section navigation
-- Dark mode
-- Product collections with category filters
-- Customer review gallery with lightbox
-- WhatsApp, phone, email, and Instagram contact options
-- Store locations (Madurai & Pune)
-- Mobile-optimized layout with Android scroll fixes
+- Product catalog with prices, search, and filters
+- Product detail pages with Add to Cart
+- Shopping cart (saved in browser)
+- Checkout with PhonePe / Google Pay UPI QR code
+- Cash on Delivery (COD) option
+- WhatsApp order confirmation
+- Dark mode, reviews gallery, store locations
+- Mobile bottom navigation
 
 ## Run locally
 
@@ -35,13 +36,11 @@ Open [http://localhost:3000](http://localhost:3000).
 npm run build
 ```
 
-For a GitHub Pages build (same as CI):
+For GitHub Pages with custom domain:
 
 ```bash
-GITHUB_PAGES=true npm run build
+GITHUB_PAGES=true CUSTOM_DOMAIN=true npm run build
 ```
-
-Static files are output to the `out/` folder.
 
 ## Contact
 

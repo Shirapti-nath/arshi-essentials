@@ -30,11 +30,12 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build for GitHub Pages
+      - name: Build for GitHub Pages (custom domain)
         run: npm run build
         env:
           GITHUB_PAGES: "true"
-          NEXT_PUBLIC_BASE_PATH: "/arshi-essentials"
+          CUSTOM_DOMAIN: "true"
+          NEXT_PUBLIC_BASE_PATH: ""
 
       - name: Ensure Jekyll does not strip Next.js assets
         run: touch out/.nojekyll
