@@ -6,7 +6,7 @@ import { ShieldCheck, Truck, Gem, Headphones } from "lucide-react";
 const trustItems = [
   { icon: Gem, label: "Premium Quality" },
   { icon: Truck, label: "Fast Delivery" },
-  { icon: ShieldCheck, label: "Secure UPI Payment" },
+  { icon: ShieldCheck, label: "PhonePe QR Pay" },
   { icon: Headphones, label: "Dedicated Support" },
 ];
 

@@ -7,6 +7,7 @@ import { useCart } from "@/context/CartContext";
 import { PriceDisplay } from "@/components/ui/PriceDisplay";
 import { formatINR, formatPriceRange } from "@/lib/format";
 import { href } from "@/lib/routes";
+import { PaymentStepsInfo } from "@/components/checkout/PaymentStepsInfo";
 
 export default function CartPage() {
   const { items, itemCount, subtotal, subtotalMax, updateQuantity, removeItem, getProduct } = useCart();
@@ -151,16 +152,8 @@ export default function CartPage() {
               >
                 Proceed to Checkout
               </Link>
-              <div className="mt-4 rounded-xl bg-accent/40 p-4 text-xs leading-relaxed text-muted">
-                <p className="font-semibold text-foreground">How to pay</p>
-                <ol className="mt-2 list-inside list-decimal space-y-1">
-                  <li>Proceed to Checkout</li>
-                  <li>Scan the UPI QR code (PhonePe / Google Pay)</li>
-                  <li>
-                    Tap &ldquo;I&apos;ve Paid — Confirm on WhatsApp&rdquo; with
-                    your Order ID
-                  </li>
-                </ol>
+              <div className="mt-4">
+                <PaymentStepsInfo compact />
               </div>
             </div>
           </div>

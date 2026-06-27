@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 import { PaymentSection } from "@/components/checkout/PaymentSection";
+import { PaymentStepsInfo } from "@/components/checkout/PaymentStepsInfo";
 import { formatINR, formatPriceRange, generateOrderId } from "@/lib/format";
 import { href } from "@/lib/routes";
 import type { CheckoutDetails } from "@/types";
@@ -97,8 +98,9 @@ export default function CheckoutPage() {
             Order Sent!
           </h1>
           <p className="mt-3 text-muted">
-            Your order <strong className="font-mono">{orderId}</strong> has been
-            shared on WhatsApp. We&apos;ll confirm shortly.
+            Your order <strong className="font-mono">{orderId}</strong> with full
+            details has been sent on WhatsApp. We will confirm and intimate you
+            shortly.
           </p>
           <Link
             href={href("/")}
@@ -116,15 +118,12 @@ export default function CheckoutPage() {
       <div className="container-max px-4 sm:px-6 lg:px-8">
         <h1 className="font-serif text-3xl font-bold text-foreground">Checkout</h1>
         <p className="mt-2 text-muted">
-          Complete your details, pay via UPI QR, then confirm on WhatsApp with
-          your Order ID.
+          Pay with PhonePe QR, then confirm your order details and Order ID on
+          WhatsApp — we intimate you once confirmed.
         </p>
 
-        <div className="mt-6 rounded-xl border border-border bg-accent/30 px-4 py-3 text-sm text-muted">
-          <strong className="text-foreground">Payment steps:</strong> Fill
-          delivery details → Scan UPI QR below → Tap &ldquo;I&apos;ve Paid —
-          Confirm on WhatsApp&rdquo; to send your order with Order ID{" "}
-          <span className="font-mono font-medium text-foreground">{orderId}</span>
+        <div className="mt-6">
+          <PaymentStepsInfo orderId={orderId} />
         </div>
 
         <div className="mt-10 grid gap-10 lg:grid-cols-2">

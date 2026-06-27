@@ -11,8 +11,8 @@ export default function NotFound() {
         Page not found
       </h1>
       <p className="mt-3 max-w-md text-muted">
-        This page doesn&apos;t exist. Go back to our homepage to browse sarees
-        and ethnic wear.
+        This page doesn&apos;t exist. Go back to our homepage to shop sarees,
+        pay via PhonePe QR, and confirm your order on WhatsApp.
       </p>
       <Link
         href={href("/")}
