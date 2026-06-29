@@ -7,6 +7,7 @@ import { useCart } from "@/context/CartContext";
 import { PriceDisplay } from "@/components/ui/PriceDisplay";
 import { formatINR, formatPriceRange } from "@/lib/format";
 import { href } from "@/lib/routes";
+import { CheckoutSteps } from "@/components/checkout/CheckoutSteps";
 import { PaymentStepsInfo } from "@/components/checkout/PaymentStepsInfo";
 
 export default function CartPage() {
@@ -23,6 +24,8 @@ export default function CartPage() {
             ? "No items yet"
             : `${itemCount} item${itemCount !== 1 ? "s" : ""} in your cart`}
         </p>
+
+        {items.length > 0 && <CheckoutSteps current="cart" />}
 
         {items.length === 0 ? (
           <div className="mt-16 flex flex-col items-center text-center">

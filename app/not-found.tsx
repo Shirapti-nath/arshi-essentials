@@ -16,9 +16,21 @@ export default function NotFound() {
       </p>
       <Link
         href={href("/")}
-        className="mt-8 rounded-full bg-primary px-8 py-3 text-sm font-semibold text-white hover:bg-primary-light"
+        className="mt-8 inline-block rounded-full bg-primary px-8 py-3 text-sm font-semibold text-white hover:bg-primary-light"
       >
         Back to Homepage
+      </Link>
+      <Link
+        href={href("/cart/")}
+        className="mt-4 inline-block rounded-full border border-primary px-6 py-2.5 text-sm font-semibold text-primary hover:bg-primary/5"
+      >
+        Go to Cart
+      </Link>
+      <Link
+        href={href("/checkout/")}
+        className="mt-3 inline-block text-sm text-primary hover:underline"
+      >
+        Go to Checkout
       </Link>
       <p className="mt-6 text-xs text-muted">
         Live site:{" "}
