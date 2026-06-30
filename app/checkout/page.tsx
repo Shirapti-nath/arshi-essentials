@@ -26,7 +26,7 @@ const emptyDetails: CheckoutDetails = {
 };
 
 export default function CheckoutPage() {
-  const { items, itemCount, subtotal, subtotalMax, getProduct, clearCart } =
+  const { items, itemCount, subtotal, subtotalMax, getProduct, clearCart, hydrated } =
     useCart();
   const [details, setDetails] = useState<CheckoutDetails>(emptyDetails);
   const [orderId] = useState(() => generateOrderId());
@@ -67,6 +67,14 @@ export default function CheckoutPage() {
       block: "start",
     });
   };
+
+  if (!hydrated) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background pt-24">
+        <p className="text-muted">Loading checkout…</p>
+      </div>
+    );
+  }
 
   if (items.length === 0 && !confirmed) {
     return (

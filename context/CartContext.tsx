@@ -15,6 +15,7 @@ const STORAGE_KEY = "arshi-cart";
 
 type CartContextValue = {
   items: CartItem[];
+  hydrated: boolean;
   itemCount: number;
   uniqueCount: number;
   subtotal: number;
@@ -116,6 +117,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const value = useMemo(
     () => ({
       items,
+      hydrated,
       itemCount,
       uniqueCount,
       subtotal,
@@ -129,6 +131,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }),
     [
       items,
+      hydrated,
       itemCount,
       uniqueCount,
       subtotal,
