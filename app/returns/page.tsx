@@ -1,12 +1,12 @@
 import Link from "next/link";
-import { href } from "@/lib/routes";
+import { appPath } from "@/lib/routes";
 
 export default function ReturnsPage() {
   return (
     <div className="min-h-screen bg-background pt-24 pb-16">
       <div className="container-max max-w-2xl px-4 sm:px-6">
         <Link
-          href={href("/")}
+          href={appPath("/")}
           className="text-sm font-medium text-primary hover:underline"
         >
           ← Back to home

@@ -6,7 +6,7 @@ import { Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { PriceDisplay } from "@/components/ui/PriceDisplay";
 import { formatINR, formatPriceRange } from "@/lib/format";
-import { href } from "@/lib/routes";
+import { appPath } from "@/lib/routes";
 import { CheckoutSteps } from "@/components/checkout/CheckoutSteps";
 import { PaymentStepsInfo } from "@/components/checkout/PaymentStepsInfo";
 import { PhonePeQrCode } from "@/components/checkout/PhonePeQrCode";
@@ -33,7 +33,7 @@ export default function CartPage() {
             <ShoppingBag className="mb-4 h-16 w-16 text-muted" />
             <p className="text-lg font-medium">Your cart is empty</p>
             <Link
-              href={href("/#collections")}
+              href={appPath("/#collections")}
               className="mt-6 rounded-full bg-primary px-8 py-3 text-sm font-semibold text-white"
             >
               Browse Collections
@@ -51,7 +51,7 @@ export default function CartPage() {
                     className="flex gap-4 rounded-2xl border border-border bg-card p-4 shadow-sm"
                   >
                     <Link
-                      href={href(`/products/${product.slug}/`)}
+                      href={appPath(`/products/${product.slug}/`)}
                       className="relative h-28 w-24 shrink-0 overflow-hidden rounded-xl"
                     >
                       <Image
@@ -64,7 +64,7 @@ export default function CartPage() {
                     </Link>
                     <div className="flex min-w-0 flex-1 flex-col">
                       <Link
-                        href={href(`/products/${product.slug}/`)}
+                        href={appPath(`/products/${product.slug}/`)}
                         className="font-serif text-lg font-semibold text-foreground hover:text-primary"
                       >
                         {product.title}
@@ -151,7 +151,7 @@ export default function CartPage() {
                 </span>
               </div>
               <Link
-                href={href("/checkout/")}
+                href={appPath("/checkout/")}
                 className="mt-6 block w-full rounded-full bg-primary py-3.5 text-center text-sm font-semibold text-white hover:bg-primary-light"
               >
                 Proceed to Checkout &amp; Pay

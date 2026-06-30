@@ -6,7 +6,7 @@ import { SmoothScrollLink } from "@/components/ui/SmoothScrollLink";
 import { navItems } from "@/data/navigation";
 import { contact } from "@/data/contact";
 import { site } from "@/data/site";
-import { href } from "@/lib/routes";
+import { appPath } from "@/lib/routes";
 
 const socialLinks = [
   {
@@ -103,13 +103,13 @@ export function Footer() {
         </div>
 
         <div className="mt-10 flex flex-wrap justify-center gap-4 border-t border-border pt-6 text-center text-sm text-muted">
-          <Link href={href("/shipping/")} className="hover:text-primary">
+          <Link href={appPath("/shipping/")} className="hover:text-primary">
             Shipping
           </Link>
-          <Link href={href("/returns/")} className="hover:text-primary">
+          <Link href={appPath("/returns/")} className="hover:text-primary">
             Returns
           </Link>
-          <Link href={href("/privacy/")} className="hover:text-primary">
+          <Link href={appPath("/privacy/")} className="hover:text-primary">
             Privacy
           </Link>
         </div>

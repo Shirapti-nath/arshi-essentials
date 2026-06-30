@@ -2,13 +2,13 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { href } from "@/lib/routes";
+import { appPath } from "@/lib/routes";
 
 export default function WishlistRedirectPage() {
   const router = useRouter();
 
   useEffect(() => {
-    router.replace(href("/#collections"));
+    router.replace(appPath("/#collections"));
   }, [router]);
 
   return (

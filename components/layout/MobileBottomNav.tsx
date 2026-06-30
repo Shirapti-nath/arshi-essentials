@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Home, ShoppingBag, Grid3X3, MessageCircle } from "lucide-react";
 import { useCart } from "@/context/CartContext";
-import { href } from "@/lib/routes";
+import { appPath } from "@/lib/routes";
 import { contact } from "@/data/contact";
 
 export function MobileBottomNav() {
@@ -16,21 +16,21 @@ export function MobileBottomNav() {
     >
       <div className="grid grid-cols-4 pb-[env(safe-area-inset-bottom)]">
         <Link
-          href={href("/")}
+          href={appPath("/")}
           className="flex flex-col items-center gap-1 py-3 text-xs font-medium text-muted hover:text-primary"
         >
           <Home className="h-5 w-5" />
           Home
         </Link>
         <Link
-          href={href("/#collections")}
+          href={appPath("/#collections")}
           className="flex flex-col items-center gap-1 py-3 text-xs font-medium text-muted hover:text-primary"
         >
           <Grid3X3 className="h-5 w-5" />
           Shop
         </Link>
         <Link
-          href={href("/cart/")}
+          href={appPath("/cart/")}
           className="relative flex flex-col items-center gap-1 py-3 text-xs font-medium text-muted hover:text-primary"
         >
           <ShoppingBag className="h-5 w-5" />

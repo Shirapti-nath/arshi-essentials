@@ -6,7 +6,7 @@ import { ArrowLeft, MessageCircle } from "lucide-react";
 import { getAllProductSlugs, getProductBySlug } from "@/lib/products";
 import { PriceDisplay } from "@/components/ui/PriceDisplay";
 import { AddToCartButton } from "@/components/ui/AddToCartButton";
-import { href } from "@/lib/routes";
+import { appPath } from "@/lib/routes";
 import { contact } from "@/data/contact";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -43,7 +43,7 @@ export default async function ProductPage({ params }: Props) {
     <div className="min-h-screen bg-background pt-24 pb-16">
       <div className="container-max px-4 sm:px-6 lg:px-8">
         <Link
-          href={href("/#collections")}
+          href={appPath("/#collections")}
           className="mb-8 inline-flex items-center gap-2 text-sm font-medium text-muted hover:text-primary"
         >
           <ArrowLeft className="h-4 w-4" />

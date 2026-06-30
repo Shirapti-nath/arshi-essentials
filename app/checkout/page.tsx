@@ -2,12 +2,13 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
-import { PaymentSection } from "@/components/checkout/PaymentSection";
 import { CheckoutSteps } from "@/components/checkout/CheckoutSteps";
 import { PaymentStepsInfo } from "@/components/checkout/PaymentStepsInfo";
 import { formatINR, formatPriceRange, generateOrderId } from "@/lib/format";
-import { href } from "@/lib/routes";
+import { appPath } from "@/lib/routes";
+import { saveCheckoutSession } from "@/lib/checkoutSession";
 import {
   isCheckoutDetailsValid,
   validateCheckoutDetails,
@@ -26,11 +27,11 @@ const emptyDetails: CheckoutDetails = {
 };
 
 export default function CheckoutPage() {
-  const { items, itemCount, subtotal, subtotalMax, getProduct, clearCart, hydrated } =
+  const router = useRouter();
+  const { items, itemCount, subtotal, subtotalMax, getProduct, hydrated } =
     useCart();
   const [details, setDetails] = useState<CheckoutDetails>(emptyDetails);
   const [orderId] = useState(() => generateOrderId());
-  const [confirmed, setConfirmed] = useState(false);
   const [errors, setErrors] = useState<CheckoutErrors>({});
 
   const lineItems = useMemo(
@@ -55,17 +56,14 @@ export default function CheckoutPage() {
     [items, getProduct]
   );
 
-  const detailsValid = isCheckoutDetailsValid(details);
-
-  const handleSaveDetails = (e: React.FormEvent) => {
+  const handleContinueToPayment = (e: React.FormEvent) => {
     e.preventDefault();
     const nextErrors = validateCheckoutDetails(details);
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
-    document.getElementById("payment-section")?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
+
+    saveCheckoutSession(details, orderId);
+    router.push(appPath("/payment/"));
   };
 
   if (!hydrated) {
@@ -76,7 +74,7 @@ export default function CheckoutPage() {
     );
   }
 
-  if (items.length === 0 && !confirmed) {
+  if (items.length === 0) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background px-4 pt-24">
         <div className="max-w-md text-center">
@@ -87,7 +85,7 @@ export default function CheckoutPage() {
             Add items to your cart before checkout.
           </p>
           <Link
-            href={href("/#collections")}
+            href={appPath("/#collections")}
             className="mt-8 inline-block rounded-full bg-primary px-8 py-3 text-sm font-semibold text-white"
           >
             Browse Collections
@@ -97,46 +95,16 @@ export default function CheckoutPage() {
     );
   }
 
-  if (confirmed) {
-    return (
-      <div className="min-h-screen bg-background px-4 pt-24 pb-24">
-        <div className="container-max">
-          <CheckoutSteps current="done" />
-          <div className="mx-auto max-w-md text-center">
-            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 text-3xl">
-              ✓
-            </div>
-            <h1 className="font-serif text-2xl font-bold text-foreground">
-              Order Sent!
-            </h1>
-            <p className="mt-3 text-muted">
-              Your order <strong className="font-mono">{orderId}</strong> with
-              full details has been sent on WhatsApp. We will confirm and
-              intimate you shortly.
-            </p>
-            <Link
-              href={href("/")}
-              className="mt-8 inline-block rounded-full bg-primary px-8 py-3 text-sm font-semibold text-white"
-            >
-              Continue Shopping
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-background pt-24 pb-24">
       <div className="container-max px-4 sm:px-6 lg:px-8">
-        <CheckoutSteps current="payment" />
+        <CheckoutSteps current="details" />
 
         <h1 className="font-serif text-3xl font-bold text-foreground">
-          Checkout
+          Delivery Details
         </h1>
         <p className="mt-2 text-muted">
-          Fill delivery details, scan the PhonePe UPI QR code, then confirm on
-          WhatsApp.
+          Fill your details, then continue to the PhonePe UPI payment page.
         </p>
         <p className="mt-1 font-mono text-sm text-primary">Order ID: {orderId}</p>
 
@@ -145,8 +113,8 @@ export default function CheckoutPage() {
         </div>
 
         <div className="mt-10 grid gap-10 lg:grid-cols-2">
-          <form onSubmit={handleSaveDetails} className="space-y-4">
-            <h2 className="font-serif text-xl font-bold">Delivery Details</h2>
+          <form onSubmit={handleContinueToPayment} className="space-y-4">
+            <h2 className="font-serif text-xl font-bold">Your Details</h2>
 
             {(
               [
@@ -180,57 +148,46 @@ export default function CheckoutPage() {
 
             <button
               type="submit"
-              className="w-full rounded-full border border-primary py-3 text-sm font-semibold text-primary hover:bg-primary/5"
+              disabled={!isCheckoutDetailsValid(details)}
+              className="w-full rounded-full bg-primary py-3.5 text-sm font-semibold text-white hover:bg-primary-light disabled:cursor-not-allowed disabled:opacity-50"
             >
-              Save Details &amp; Scroll to QR Payment
+              Continue to PhonePe Payment
             </button>
           </form>
 
-          <div className="space-y-6">
-            <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-              <h2 className="font-serif text-xl font-bold">Order Summary</h2>
-              <p className="mt-1 text-sm text-muted">
-                {itemCount} item{itemCount !== 1 ? "s" : ""}
-              </p>
-              <ul className="mt-4 space-y-3 border-b border-border pb-4">
-                {lineItems.map((item) => (
-                  <li key={item.title} className="flex justify-between text-sm">
-                    <span className="text-muted">
-                      {item.title} × {item.quantity}
-                    </span>
-                    <span className="font-medium">
-                      {item.priceMax > item.price
-                        ? formatPriceRange(
-                            item.price * item.quantity,
-                            item.priceMax * item.quantity
-                          )
-                        : formatINR(item.price * item.quantity)}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-4 flex justify-between text-lg font-bold">
-                <span>Total (est.)</span>
-                <span className="text-primary">
-                  {subtotalMax > subtotal
-                    ? formatPriceRange(subtotal, subtotalMax)
-                    : formatINR(subtotal)}
-                </span>
-              </div>
+          <div className="h-fit rounded-2xl border border-border bg-card p-6 shadow-sm">
+            <h2 className="font-serif text-xl font-bold">Order Summary</h2>
+            <p className="mt-1 text-sm text-muted">
+              {itemCount} item{itemCount !== 1 ? "s" : ""}
+            </p>
+            <ul className="mt-4 space-y-3 border-b border-border pb-4">
+              {lineItems.map((item) => (
+                <li key={item.title} className="flex justify-between text-sm">
+                  <span className="text-muted">
+                    {item.title} × {item.quantity}
+                  </span>
+                  <span className="font-medium">
+                    {item.priceMax > item.price
+                      ? formatPriceRange(
+                          item.price * item.quantity,
+                          item.priceMax * item.quantity
+                        )
+                      : formatINR(item.price * item.quantity)}
+                  </span>
+                </li>
+              ))}
+            </ul>
+            <div className="mt-4 flex justify-between text-lg font-bold">
+              <span>Total (est.)</span>
+              <span className="text-primary">
+                {subtotalMax > subtotal
+                  ? formatPriceRange(subtotal, subtotalMax)
+                  : formatINR(subtotal)}
+              </span>
             </div>
-
-            <PaymentSection
-              total={subtotal}
-              totalMax={subtotalMax}
-              orderId={orderId}
-              items={lineItems}
-              details={details}
-              detailsValid={detailsValid}
-              onConfirm={() => {
-                clearCart();
-                setConfirmed(true);
-              }}
-            />
+            <p className="mt-4 text-xs text-muted">
+              Next step: scan PhonePe UPI QR and confirm on WhatsApp.
+            </p>
           </div>
         </div>
       </div>

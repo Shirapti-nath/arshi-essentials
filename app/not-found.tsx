@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { href } from "@/lib/routes";
+import { appPath } from "@/lib/routes";
 
 export default function NotFound() {
   return (
@@ -15,22 +15,28 @@ export default function NotFound() {
         pay via PhonePe QR, and confirm your order on WhatsApp.
       </p>
       <Link
-        href={href("/")}
+        href={appPath("/")}
         className="mt-8 inline-block rounded-full bg-primary px-8 py-3 text-sm font-semibold text-white hover:bg-primary-light"
       >
         Back to Homepage
       </Link>
       <Link
-        href={href("/cart/")}
+        href={appPath("/cart/")}
         className="mt-4 inline-block rounded-full border border-primary px-6 py-2.5 text-sm font-semibold text-primary hover:bg-primary/5"
       >
         Go to Cart
       </Link>
       <Link
-        href={href("/checkout/")}
+        href={appPath("/checkout/")}
         className="mt-3 inline-block text-sm text-primary hover:underline"
       >
         Go to Checkout
+      </Link>
+      <Link
+        href={appPath("/payment/")}
+        className="mt-3 inline-block text-sm text-primary hover:underline"
+      >
+        Go to Payment
       </Link>
       <p className="mt-6 text-xs text-muted">
         Live site:{" "}

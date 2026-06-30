@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useCart } from "@/context/CartContext";
 import { PriceDisplay } from "@/components/ui/PriceDisplay";
 import { formatINR, formatPriceRange } from "@/lib/format";
-import { href } from "@/lib/routes";
+import { appPath } from "@/lib/routes";
 
 type CartDrawerProps = {
   open: boolean;
@@ -101,7 +101,7 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
                     Browse our collections and add items
                   </p>
                   <Link
-                    href={href("/#collections")}
+                    href={appPath("/#collections")}
                     onClick={onClose}
                     className="mt-6 rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-white"
                   >
@@ -209,14 +209,14 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
                   Final price depends on design selected. Confirmed on WhatsApp.
                 </p>
                 <Link
-                  href={href("/checkout/")}
+                  href={appPath("/checkout/")}
                   onClick={onClose}
                   className="block w-full rounded-full bg-primary py-3.5 text-center text-sm font-semibold text-white hover:bg-primary-light"
                 >
                   Proceed to Checkout
                 </Link>
                 <Link
-                  href={href("/cart/")}
+                  href={appPath("/cart/")}
                   onClick={onClose}
                   className="mt-2 block w-full py-2 text-center text-sm font-medium text-primary hover:underline"
                 >

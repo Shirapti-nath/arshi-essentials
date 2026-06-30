@@ -40,6 +40,7 @@ jobs:
           test -f out/index.html
           test -f out/cart/index.html
           test -f out/checkout/index.html
+          test -f out/payment/index.html
           test -f out/payments/arshi-essentials-upi-qr.png
 
       - name: Ensure Jekyll does not strip Next.js assets

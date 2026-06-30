@@ -7,7 +7,7 @@ import { ArrowRight } from "lucide-react";
 import type { Product } from "@/types";
 import { PriceDisplay } from "@/components/ui/PriceDisplay";
 import { AddToCartButton } from "@/components/ui/AddToCartButton";
-import { href } from "@/lib/routes";
+import { appPath } from "@/lib/routes";
 import { cn } from "@/lib/utils";
 
 type ProductCardProps = {
@@ -34,7 +34,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
         "transition-shadow duration-500 hover:shadow-2xl hover:shadow-primary/10"
       )}
     >
-      <Link href={href(`/products/${product.slug}/`)} className="block">
+      <Link href={appPath(`/products/${product.slug}/`)} className="block">
         <div className="relative aspect-[4/5] overflow-hidden">
           <Image
             src={product.image}
@@ -68,7 +68,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
         <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center">
           <AddToCartButton productId={product.id} className="flex-1" />
           <Link
-            href={href(`/products/${product.slug}/`)}
+            href={appPath(`/products/${product.slug}/`)}
             className="inline-flex items-center justify-center gap-1 text-sm font-medium text-primary hover:underline"
           >
             Details

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Check } from "lucide-react";
-import { href } from "@/lib/routes";
+import { appPath } from "@/lib/routes";
 import { cn } from "@/lib/utils";
 
 type CheckoutStepsProps = {
@@ -10,7 +10,7 @@ type CheckoutStepsProps = {
 const steps = [
   { key: "cart" as const, label: "Cart", path: "/cart/" },
   { key: "details" as const, label: "Details", path: "/checkout/" },
-  { key: "payment" as const, label: "Pay UPI", path: "/checkout/" },
+  { key: "payment" as const, label: "Pay UPI", path: "/payment/" },
   { key: "done" as const, label: "Confirm", path: null },
 ];
 
@@ -52,7 +52,7 @@ export function CheckoutSteps({ current }: CheckoutStepsProps) {
             <li key={step.key} className="flex flex-1 flex-col items-center">
               {step.path && index <= currentIndex ? (
                 <Link
-                  href={href(step.path)}
+                  href={appPath(step.path)}
                   className="flex flex-col items-center hover:opacity-80"
                 >
                   {content}
