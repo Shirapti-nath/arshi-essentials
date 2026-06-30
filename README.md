@@ -4,7 +4,11 @@ Elegant ethnic wear marketplace for **Arshi Essentials** — shop sarees, silk c
 
 ## Live website
 
-**https://arshiessentials.com**
+**https://shirapti-nath.github.io/arshi-essentials/**
+
+## Deploy
+
+Deploys automatically to **GitHub Pages** when you push to `main`. No Vercel or Render needed.
 
 ## Repository
 
@@ -36,11 +40,13 @@ Open [http://localhost:3000](http://localhost:3000).
 npm run build
 ```
 
-For GitHub Pages with custom domain:
+For GitHub Pages (used by this project):
 
 ```bash
-GITHUB_PAGES=true CUSTOM_DOMAIN=true npm run build
+npm run build
 ```
+
+Output is in the `out/` folder and is published by GitHub Actions.
 
 ## Contact
 
