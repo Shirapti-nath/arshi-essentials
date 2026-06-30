@@ -9,6 +9,7 @@ import { formatINR, formatPriceRange } from "@/lib/format";
 import { href } from "@/lib/routes";
 import { CheckoutSteps } from "@/components/checkout/CheckoutSteps";
 import { PaymentStepsInfo } from "@/components/checkout/PaymentStepsInfo";
+import { PhonePeQrCode } from "@/components/checkout/PhonePeQrCode";
 
 export default function CartPage() {
   const { items, itemCount, subtotal, subtotalMax, updateQuantity, removeItem, getProduct } = useCart();
@@ -153,8 +154,14 @@ export default function CartPage() {
                 href={href("/checkout/")}
                 className="mt-6 block w-full rounded-full bg-primary py-3.5 text-center text-sm font-semibold text-white hover:bg-primary-light"
               >
-                Proceed to Checkout
+                Proceed to Checkout &amp; Pay
               </Link>
+              <div className="mt-6 rounded-xl border border-border bg-background p-4">
+                <p className="mb-3 text-center text-xs font-semibold text-foreground">
+                  PhonePe UPI QR — pay at checkout
+                </p>
+                <PhonePeQrCode size="sm" showLabel={false} />
+              </div>
               <div className="mt-4">
                 <PaymentStepsInfo compact />
               </div>

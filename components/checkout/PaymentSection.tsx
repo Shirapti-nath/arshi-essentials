@@ -1,10 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import { MessageCircle, QrCode } from "lucide-react";
 import { formatINR, formatPriceRange } from "@/lib/format";
-import { assetPath } from "@/lib/assetPath";
 import { contact } from "@/data/contact";
+import { PhonePeQrCode } from "@/components/checkout/PhonePeQrCode";
 import type { CheckoutDetails } from "@/types";
 import { cn } from "@/lib/utils";
 
@@ -51,8 +50,10 @@ export function PaymentSection({
       .join("\n");
 
     const deliveryBlock =
-      `\n\nDeliver to:\n${details.name}\n${details.phone}\n${details.address}\n${details.city} — ${details.pincode}` +
-      (details.email ? `\nEmail: ${details.email}` : "");
+      details.name.trim()
+        ? `\n\nDeliver to:\n${details.name}\n${details.phone}\n${details.address}\n${details.city} — ${details.pincode}` +
+          (details.email ? `\nEmail: ${details.email}` : "")
+        : "\n\n(Delivery details filled on checkout)";
 
     return encodeURIComponent(
       `Hi Arshi Essentials! Please confirm my order.\n\n` +
@@ -75,7 +76,10 @@ export function PaymentSection({
   };
 
   return (
-    <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+    <div
+      id="payment-section"
+      className="rounded-2xl border-2 border-primary/30 bg-card p-6 shadow-sm"
+    >
       <div className="flex items-center gap-2">
         <QrCode className="h-5 w-5 text-primary" />
         <h2 className="font-serif text-xl font-bold text-foreground">
@@ -83,36 +87,19 @@ export function PaymentSection({
         </h2>
       </div>
       <p className="mt-2 text-sm text-muted">
-        Step 1: Scan the QR code with PhonePe (or any UPI app). Step 2: Tap
-        confirm below to send your order details on WhatsApp.
+        Scan the QR code below with PhonePe, then confirm your order on
+        WhatsApp.
       </p>
 
-      <div className="mt-6 text-center">
-        <p className="mb-1 text-sm font-semibold text-foreground">
-          Scan with PhonePe
-        </p>
-        <p className="mb-4 text-xs text-muted">
-          Also works with Google Pay, Paytm, and any UPI app
-        </p>
-        <div className="mx-auto inline-block overflow-hidden rounded-2xl border-2 border-primary/20 bg-white p-4 shadow-md">
-          <Image
-            src={assetPath("/payments/arshi-essentials-upi-qr.png")}
-            alt="Arshi Essentials PhonePe UPI QR code — scan to pay"
-            width={260}
-            height={260}
-            className="mx-auto h-auto w-[240px] object-contain"
-            priority
-          />
-        </div>
+      <div className="mt-6">
+        <PhonePeQrCode size="lg" />
         <p className="mt-3 text-xs text-muted">
           Pay to <strong>Arshi Essentials</strong> · Amount: {totalLabel}
         </p>
       </div>
 
       <div className="mt-6 rounded-xl border border-border bg-background p-4">
-        <p className="text-sm font-semibold text-foreground">
-          Order sent on WhatsApp
-        </p>
+        <p className="text-sm font-semibold text-foreground">Your order</p>
         <p className="mt-1 font-mono text-xs text-primary">Order ID: {orderId}</p>
         <ul className="mt-3 space-y-1.5 text-xs text-muted">
           {items.map((item) => (
@@ -124,9 +111,15 @@ export function PaymentSection({
         <p className="mt-2 text-sm font-bold text-foreground">
           Total (est.): {totalLabel}
         </p>
-        <p className="mt-2 text-xs text-muted">
-          Delivery: {details.name}, {details.phone}, {details.city}
-        </p>
+        {detailsValid ? (
+          <p className="mt-2 text-xs text-muted">
+            Delivery: {details.name}, {details.phone}, {details.city}
+          </p>
+        ) : (
+          <p className="mt-2 text-xs text-amber-700 dark:text-amber-400">
+            Fill delivery details on the left, then confirm on WhatsApp.
+          </p>
+        )}
       </div>
 
       <button
