@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { getSectionIdFromHash, scrollToSection } from "@/lib/scroll";
+import { isHomePath } from "@/lib/navigation";
 
 function hasExplicitHash(): boolean {
   const hash = window.location.hash;
@@ -10,6 +12,8 @@ function hasExplicitHash(): boolean {
 
 /** Keeps mobile visitors at the hero on fresh load; handles hash links safely. */
 export function HashScrollManager() {
+  const pathname = usePathname();
+
   useEffect(() => {
     if ("scrollRestoration" in history) {
       history.scrollRestoration = "manual";
@@ -34,34 +38,33 @@ export function HashScrollManager() {
       }
     };
 
-    forceTop();
-    requestAnimationFrame(forceTop);
+    if (isHomePath(pathname)) {
+      if (hasExplicitHash()) {
+        const timers = [0, 100, 300, 600].map((ms) =>
+          window.setTimeout(() => scrollToHash(ms === 0 ? "auto" : "smooth"), ms)
+        );
+        return () => timers.forEach((id) => window.clearTimeout(id));
+      }
 
-    const timers = [0, 50, 150, 400, 800].map((ms) =>
-      window.setTimeout(forceTop, ms)
-    );
+      forceTop();
+      const timers = [0, 50, 150, 400, 800].map((ms) =>
+        window.setTimeout(forceTop, ms)
+      );
+      return () => timers.forEach((id) => window.clearTimeout(id));
+    }
 
-    const onLoad = () => forceTop();
-    const onPageShow = () => forceTop();
+    return undefined;
+  }, [pathname]);
 
-    window.addEventListener("load", onLoad);
-    window.addEventListener("pageshow", onPageShow);
-
-    const initialTimer = window.setTimeout(() => scrollToHash("auto"), 100);
-
-    const onNavigate = () => scrollToHash("smooth");
-
-    window.addEventListener("popstate", onNavigate);
-    window.addEventListener("hashchange", onNavigate);
-
-    return () => {
-      timers.forEach((id) => window.clearTimeout(id));
-      window.clearTimeout(initialTimer);
-      window.removeEventListener("load", onLoad);
-      window.removeEventListener("pageshow", onPageShow);
-      window.removeEventListener("popstate", onNavigate);
-      window.removeEventListener("hashchange", onNavigate);
+  useEffect(() => {
+    const onHashChange = () => {
+      if (!isHomePath(window.location.pathname)) return;
+      const sectionId = getSectionIdFromHash(window.location.hash);
+      if (sectionId) scrollToSection(sectionId, "smooth");
     };
+
+    window.addEventListener("hashchange", onHashChange);
+    return () => window.removeEventListener("hashchange", onHashChange);
   }, []);
 
   return null;

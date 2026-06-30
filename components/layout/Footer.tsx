@@ -38,7 +38,10 @@ export function Footer() {
       <div className="container-max section-padding">
         <div className="grid gap-10 md:grid-cols-3">
           <div>
-            <div className="flex items-center gap-3">
+            <SmoothScrollLink
+              href="#home"
+              className="flex items-center gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            >
               <Logo size={44} />
               <div>
                 <p className="font-serif text-xl font-bold text-foreground">
@@ -48,7 +51,7 @@ export function Footer() {
                   Elegant Clothing for Everyday
                 </p>
               </div>
-            </div>
+            </SmoothScrollLink>
             <p className="mt-4 text-sm leading-relaxed text-muted">
               Discover timeless ethnic fashion with our exclusive collection of
               sarees and traditional wear crafted with elegance, comfort, and
