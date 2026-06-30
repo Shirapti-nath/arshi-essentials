@@ -4,17 +4,16 @@ import { appPath } from "@/lib/routes";
 import { cn } from "@/lib/utils";
 
 type CheckoutStepsProps = {
-  current: "cart" | "details" | "payment" | "done";
+  current: "cart" | "payment" | "done";
 };
 
 const steps = [
   { key: "cart" as const, label: "Cart", path: "/cart/" },
-  { key: "details" as const, label: "Details", path: "/checkout/" },
-  { key: "payment" as const, label: "Pay UPI", path: "/payment/" },
+  { key: "payment" as const, label: "Details & Pay", path: "/payment/" },
   { key: "done" as const, label: "Confirm", path: null },
 ];
 
-const order = ["cart", "details", "payment", "done"] as const;
+const order = ["cart", "payment", "done"] as const;
 
 export function CheckoutSteps({ current }: CheckoutStepsProps) {
   const currentIndex = order.indexOf(current);
@@ -50,7 +49,7 @@ export function CheckoutSteps({ current }: CheckoutStepsProps) {
 
           return (
             <li key={step.key} className="flex flex-1 flex-col items-center">
-              {step.path && index <= currentIndex ? (
+              {step.path ? (
                 <Link
                   href={appPath(step.path)}
                   className="flex flex-col items-center hover:opacity-80"
@@ -59,15 +58,6 @@ export function CheckoutSteps({ current }: CheckoutStepsProps) {
                 </Link>
               ) : (
                 <div className="flex flex-col items-center">{content}</div>
-              )}
-              {index < steps.length - 1 && (
-                <div
-                  className={cn(
-                    "absolute hidden sm:block",
-                    index < currentIndex ? "bg-green-600" : "bg-border"
-                  )}
-                  aria-hidden
-                />
               )}
             </li>
           );

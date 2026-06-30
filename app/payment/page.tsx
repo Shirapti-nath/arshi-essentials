@@ -2,40 +2,37 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { PaymentSection } from "@/components/checkout/PaymentSection";
+import { OrderSummaryCard } from "@/components/checkout/OrderSummaryCard";
 import { CheckoutSteps } from "@/components/checkout/CheckoutSteps";
-import { formatINR, formatPriceRange, generateOrderId } from "@/lib/format";
+import { generateOrderId } from "@/lib/format";
 import { appPath } from "@/lib/routes";
+import { clearCheckoutSession } from "@/lib/checkoutSession";
 import {
-  clearCheckoutSession,
-  loadCheckoutDetails,
-  loadCheckoutOrderId,
-} from "@/lib/checkoutSession";
-import { isCheckoutDetailsValid } from "@/lib/validation";
+  isCheckoutDetailsValid,
+  validateCheckoutDetails,
+  type CheckoutErrors,
+} from "@/lib/validation";
 import type { CheckoutDetails } from "@/types";
 
+const emptyDetails: CheckoutDetails = {
+  name: "",
+  phone: "",
+  email: "",
+  address: "",
+  city: "",
+  pincode: "",
+  paymentMethod: "upi",
+};
+
 export default function PaymentPage() {
-  const router = useRouter();
-  const { items, itemCount, subtotal, subtotalMax, getProduct, clearCart, hydrated } =
+  const { items, itemCount, subtotal, getProduct, clearCart, hydrated } =
     useCart();
-  const [details, setDetails] = useState<CheckoutDetails | null>(null);
-  const [orderId, setOrderId] = useState("");
+  const [details, setDetails] = useState<CheckoutDetails>(emptyDetails);
+  const [orderId] = useState(() => generateOrderId());
   const [confirmed, setConfirmed] = useState(false);
-  const [ready, setReady] = useState(false);
-
-  useEffect(() => {
-    if (!hydrated) return;
-
-    const savedDetails = loadCheckoutDetails();
-    const savedOrderId = loadCheckoutOrderId() ?? generateOrderId();
-
-    setOrderId(savedOrderId);
-    setDetails(savedDetails);
-    setReady(true);
-  }, [hydrated]);
+  const [errors, setErrors] = useState<CheckoutErrors>({});
 
   const lineItems = useMemo(
     () =>
@@ -47,22 +44,23 @@ export default function PaymentPage() {
             title: product.title,
             quantity: item.quantity,
             price: product.price,
-            priceMax: product.priceMax,
           };
         })
-        .filter(Boolean) as {
-        title: string;
-        quantity: number;
-        price: number;
-        priceMax: number;
-      }[],
+        .filter(Boolean) as { title: string; quantity: number; price: number }[],
     [items, getProduct]
   );
 
-  if (!hydrated || !ready) {
+  const detailsValid = isCheckoutDetailsValid(details);
+
+  useEffect(() => {
+    if (!detailsValid) return;
+    setErrors({});
+  }, [detailsValid]);
+
+  if (!hydrated) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background pt-24">
-        <p className="text-muted">Loading payment…</p>
+        <p className="text-muted">Loading…</p>
       </div>
     );
   }
@@ -80,27 +78,6 @@ export default function PaymentPage() {
             className="mt-8 inline-block rounded-full bg-primary px-8 py-3 text-sm font-semibold text-white"
           >
             Browse Collections
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
-  if (!details || !isCheckoutDetailsValid(details)) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-background px-4 pt-24">
-        <div className="max-w-md text-center">
-          <h1 className="font-serif text-2xl font-bold text-foreground">
-            Delivery details required
-          </h1>
-          <p className="mt-3 text-muted">
-            Fill your name, phone, and address at checkout before payment.
-          </p>
-          <Link
-            href={appPath("/checkout/")}
-            className="mt-8 inline-block rounded-full bg-primary px-8 py-3 text-sm font-semibold text-white"
-          >
-            Go to Checkout
           </Link>
         </div>
       </div>
@@ -135,83 +112,108 @@ export default function PaymentPage() {
     );
   }
 
+  const handleBlurValidate = () => {
+    if (detailsValid) setErrors({});
+  };
+
   return (
     <div className="min-h-screen bg-background pt-24 pb-24">
       <div className="container-max px-4 sm:px-6 lg:px-8">
         <CheckoutSteps current="payment" />
 
-        <button
-          type="button"
-          onClick={() => router.push(appPath("/checkout/"))}
-          className="mb-4 inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Edit delivery details
-        </button>
-
         <h1 className="font-serif text-3xl font-bold text-foreground">
-          Pay with PhonePe UPI
+          Checkout &amp; Pay
         </h1>
         <p className="mt-2 text-muted">
-          Scan the QR code below, then confirm your order on WhatsApp.
+          Fill your details on the left and scan the PhonePe QR on the right.
         </p>
         <p className="mt-1 font-mono text-sm text-primary">Order ID: {orderId}</p>
 
-        <div className="mt-10 grid gap-10 lg:grid-cols-2">
+        <div className="mt-10 grid gap-10 lg:grid-cols-2 lg:items-start">
+          {/* Left: details + order summary */}
+          <div className="space-y-6">
+            <form
+              className="space-y-4 rounded-2xl border border-border bg-card p-6 shadow-sm"
+              onSubmit={(e) => e.preventDefault()}
+            >
+              <h2 className="font-serif text-xl font-bold">Delivery Details</h2>
+
+              {(
+                [
+                  ["name", "Full Name", "text", "Your full name"],
+                  ["phone", "Phone Number", "tel", "10-digit mobile"],
+                  ["email", "Email (optional)", "email", "your@email.com"],
+                  ["address", "Address", "text", "House no., street, area"],
+                  ["city", "City", "text", "City"],
+                  ["pincode", "Pincode", "text", "6-digit pincode"],
+                ] as const
+              ).map(([key, label, type, placeholder]) => (
+                <div key={key}>
+                  <label htmlFor={key} className="mb-1 block text-sm font-medium">
+                    {label}
+                  </label>
+                  <input
+                    id={key}
+                    type={type}
+                    placeholder={placeholder}
+                    value={details[key]}
+                    onChange={(e) => {
+                      setDetails((d) => ({ ...d, [key]: e.target.value }));
+                      if (errors[key]) {
+                        setErrors((prev) => {
+                          const next = { ...prev };
+                          delete next[key];
+                          return next;
+                        });
+                      }
+                    }}
+                    onBlur={() => {
+                      const fieldErrors = validateCheckoutDetails(details);
+                      if (fieldErrors[key]) {
+                        setErrors((prev) => ({ ...prev, [key]: fieldErrors[key] }));
+                      }
+                      handleBlurValidate();
+                    }}
+                    className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                  />
+                  {errors[key] && (
+                    <p className="mt-1 text-xs text-red-500">{errors[key]}</p>
+                  )}
+                </div>
+              ))}
+            </form>
+
+            <OrderSummaryCard
+              itemCount={itemCount}
+              lineItems={lineItems}
+              total={subtotal}
+              delivery={
+                detailsValid
+                  ? {
+                      name: details.name,
+                      phone: details.phone,
+                      address: details.address,
+                      city: details.city,
+                      pincode: details.pincode,
+                    }
+                  : undefined
+              }
+            />
+          </div>
+
+          {/* Right: QR always visible */}
           <PaymentSection
             total={subtotal}
-            totalMax={subtotalMax}
             orderId={orderId}
             items={lineItems}
             details={details}
-            detailsValid
+            detailsValid={detailsValid}
             onConfirm={() => {
               clearCart();
               clearCheckoutSession();
               setConfirmed(true);
             }}
           />
-
-          <div className="h-fit rounded-2xl border border-border bg-card p-6 shadow-sm">
-            <h2 className="font-serif text-xl font-bold">Order Summary</h2>
-            <p className="mt-1 text-sm text-muted">
-              {itemCount} item{itemCount !== 1 ? "s" : ""}
-            </p>
-            <ul className="mt-4 space-y-3 border-b border-border pb-4">
-              {lineItems.map((item) => (
-                <li key={item.title} className="flex justify-between text-sm">
-                  <span className="text-muted">
-                    {item.title} × {item.quantity}
-                  </span>
-                  <span className="font-medium">
-                    {item.priceMax > item.price
-                      ? formatPriceRange(
-                          item.price * item.quantity,
-                          item.priceMax * item.quantity
-                        )
-                      : formatINR(item.price * item.quantity)}
-                  </span>
-                </li>
-              ))}
-            </ul>
-            <div className="mt-4 flex justify-between text-lg font-bold">
-              <span>Total (est.)</span>
-              <span className="text-primary">
-                {subtotalMax > subtotal
-                  ? formatPriceRange(subtotal, subtotalMax)
-                  : formatINR(subtotal)}
-              </span>
-            </div>
-            <div className="mt-4 rounded-xl bg-accent/40 p-3 text-xs text-muted">
-              <p className="font-semibold text-foreground">Deliver to</p>
-              <p className="mt-1">
-                {details.name}, {details.phone}
-              </p>
-              <p>
-                {details.address}, {details.city} — {details.pincode}
-              </p>
-            </div>
-          </div>
         </div>
       </div>
     </div>

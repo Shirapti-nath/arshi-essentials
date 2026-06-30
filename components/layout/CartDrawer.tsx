@@ -7,7 +7,7 @@ import { X, Minus, Plus, ShoppingBag } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCart } from "@/context/CartContext";
 import { PriceDisplay } from "@/components/ui/PriceDisplay";
-import { formatINR, formatPriceRange } from "@/lib/format";
+import { formatINR } from "@/lib/format";
 import { appPath } from "@/lib/routes";
 
 type CartDrawerProps = {
@@ -20,7 +20,6 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
     items,
     itemCount,
     subtotal,
-    subtotalMax,
     updateQuantity,
     removeItem,
     getProduct,
@@ -40,10 +39,7 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
     };
   }, [open, onClose]);
 
-  const totalLabel =
-    subtotalMax > subtotal
-      ? formatPriceRange(subtotal, subtotalMax)
-      : formatINR(subtotal);
+  const totalLabel = formatINR(subtotal);
 
   return (
     <AnimatePresence>
@@ -113,12 +109,7 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
                   {items.map((item) => {
                     const product = getProduct(item.productId);
                     if (!product) return null;
-                    const lineMin = product.price * item.quantity;
-                    const lineMax = product.priceMax * item.quantity;
-                    const lineTotal =
-                      lineMax > lineMin
-                        ? formatPriceRange(lineMin, lineMax)
-                        : formatINR(lineMin);
+                    const lineTotal = formatINR(product.price * item.quantity);
 
                     return (
                       <li
@@ -209,7 +200,7 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
                   Final price depends on design selected. Confirmed on WhatsApp.
                 </p>
                 <Link
-                  href={appPath("/checkout/")}
+                  href={appPath("/payment/")}
                   onClick={onClose}
                   className="block w-full rounded-full bg-primary py-3.5 text-center text-sm font-semibold text-white hover:bg-primary-light"
                 >

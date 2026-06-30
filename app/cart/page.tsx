@@ -5,14 +5,13 @@ import Link from "next/link";
 import { Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { PriceDisplay } from "@/components/ui/PriceDisplay";
-import { formatINR, formatPriceRange } from "@/lib/format";
+import { formatINR } from "@/lib/format";
 import { appPath } from "@/lib/routes";
 import { CheckoutSteps } from "@/components/checkout/CheckoutSteps";
 import { PaymentStepsInfo } from "@/components/checkout/PaymentStepsInfo";
-import { PhonePeQrCode } from "@/components/checkout/PhonePeQrCode";
 
 export default function CartPage() {
-  const { items, itemCount, subtotal, subtotalMax, updateQuantity, removeItem, getProduct } = useCart();
+  const { items, itemCount, subtotal, updateQuantity, removeItem, getProduct } = useCart();
 
   return (
     <div className="min-h-screen bg-background pt-24 pb-24">
@@ -103,12 +102,7 @@ export default function CartPage() {
                         </div>
                         <div className="flex items-center gap-4">
                           <span className="font-bold text-foreground">
-                            {product.priceMax > product.price
-                              ? formatPriceRange(
-                                  product.price * item.quantity,
-                                  product.priceMax * item.quantity
-                                )
-                              : formatINR(product.price * item.quantity)}
+                            {formatINR(product.price * item.quantity)}
                           </span>
                           <button
                             type="button"
@@ -130,12 +124,8 @@ export default function CartPage() {
               <h2 className="font-serif text-xl font-bold">Order Summary</h2>
               <div className="mt-4 space-y-2 border-b border-border pb-4 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-muted">Subtotal (est.)</span>
-                  <span>
-                    {subtotalMax > subtotal
-                      ? formatPriceRange(subtotal, subtotalMax)
-                      : formatINR(subtotal)}
-                  </span>
+                  <span className="text-muted">Subtotal</span>
+                  <span>{formatINR(subtotal)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted">Shipping</span>
@@ -143,25 +133,15 @@ export default function CartPage() {
                 </div>
               </div>
               <div className="mt-4 flex justify-between text-lg font-bold">
-                <span>Total (est.)</span>
-                <span className="text-primary">
-                  {subtotalMax > subtotal
-                    ? formatPriceRange(subtotal, subtotalMax)
-                    : formatINR(subtotal)}
-                </span>
+                <span>Total</span>
+                <span className="text-primary">{formatINR(subtotal)}</span>
               </div>
               <Link
-                href={appPath("/checkout/")}
+                href={appPath("/payment/")}
                 className="mt-6 block w-full rounded-full bg-primary py-3.5 text-center text-sm font-semibold text-white hover:bg-primary-light"
               >
-                Proceed to Checkout &amp; Pay
+                Proceed to Pay
               </Link>
-              <div className="mt-6 rounded-xl border border-border bg-background p-4">
-                <p className="mb-3 text-center text-xs font-semibold text-foreground">
-                  PhonePe UPI QR — pay at checkout
-                </p>
-                <PhonePeQrCode size="sm" showLabel={false} />
-              </div>
               <div className="mt-4">
                 <PaymentStepsInfo compact />
               </div>

@@ -23,10 +23,11 @@ export function PaymentStepsInfo({ orderId, compact }: PaymentStepsInfoProps) {
         )}
       </p>
       <ol className="mt-2 list-inside list-decimal space-y-1.5">
-        <li>Add items to cart and fill your delivery details at checkout</li>
+        <li>Add items to cart and open the payment page</li>
         <li>
-          <strong className="text-foreground">Scan the PhonePe UPI QR code</strong>{" "}
-          using PhonePe, Google Pay, or any UPI app
+          Fill delivery details on the left and{" "}
+          <strong className="text-foreground">scan the PhonePe UPI QR</strong> on
+          the right
         </li>
         <li>
           Tap <strong className="text-foreground">&ldquo;Confirm on WhatsApp&rdquo;</strong>{" "}
